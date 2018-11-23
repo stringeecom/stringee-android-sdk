@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/v_remote"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/v_local"
+        android:layout_width="80dp"
+        android:layout_height="120dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="wrap_content"
+        android:layout_height="30sp"
+        android:layout_alignParentTop="true"
+        android:background="#80000000">
+
+        <TextView
+            android:id="@+id/lblCallState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="5sp"
+            android:text="Đang kết nối"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="5sp"
+            android:text="00:00"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50sp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/btn_camera"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_images_call_camera_on" />
+
+        <ImageView
+            android:id="@+id/btn_speaker"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_images_call_mic_on" />
+
+        <ImageView
+            android:id="@+id/btn_audio"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_images_call_speaker_on" />
+
+        <ImageView
+            android:id="@+id/btn_hang_up"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_images_call_cancel" />
+
+        <ImageView
+            android:id="@+id/btn_switch_camera"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_images_call_rotate_camera" />
+    </LinearLayout>
+</RelativeLayout>

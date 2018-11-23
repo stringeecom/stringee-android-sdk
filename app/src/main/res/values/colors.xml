@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ef2734</color>
+    <color name="colorPrimaryDark">#ca0714</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="ab_bg_black">#99000000</color>
+    <color name="text_dark">#555555</color>
+    <color name="separator">#cecece</color>
+    <color name="btn_login_pressed">#bf1f2a</color>
+    <color name="btn_login_disable">#939393</color>
+    <color name="btn_login_enable">#ef2734</color>
+    <color name="abs_transparent">#55000000</color>
+    <color name="item_pressed">#ececec</color>
+</resources>

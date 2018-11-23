@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Firsoft_CircleImageView">
+        <attr name="firsoft_border" format="boolean"></attr>
+        <attr name="firsoft_border_width" format="dimension"></attr>
+        <attr name="firsoft_border_color" format="color"></attr>
+        <attr name="firsoft_shadow" format="boolean"></attr>
+    </declare-styleable>
+</resources>

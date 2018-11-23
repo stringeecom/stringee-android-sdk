@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/v_form"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+
+    <FrameLayout
+        android:id="@+id/v_remote1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tv_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Network quality is very low. Voice only."
+        android:textColor="#ffffff"
+        android:textSize="@dimen/text_size_20"
+        android:visibility="gone" />
+
+
+    <RelativeLayout
+        android:id="@+id/v_top_menu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/abs_transparent"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btn_switch"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/item_selectable"
+            android:src="@drawable/ic_video_switch_light_normal" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/v_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/abs_transparent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+
+        <LinearLayout
+            android:id="@+id/v_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/btn_mute"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_mic" />
+
+            <ImageButton
+                android:id="@+id/btn_end_call"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/end_call_selector"
+                android:scaleType="fitCenter" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/v_local"
+        android:layout_width="90dp"
+        android:layout_height="150dp"
+        android:layout_above="@id/v_bottom"
+        android:layout_alignParentRight="true" />
+
+    <ImageView
+        android:id="@+id/im_network"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp" />
+</RelativeLayout>
