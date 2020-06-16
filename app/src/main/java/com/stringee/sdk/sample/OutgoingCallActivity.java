@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.stringee.call.StringeeCall;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -186,23 +185,13 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                 btnVideo.setImageResource(R.drawable.ic_video_off);
             }
             if (mStringeeCall != null) {
-                if (!mStringeeCall.isVideoCall()) { // Send camera request
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("type", "cameraRequest");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    mStringeeCall.sendCallInfo(jsonObject);
-                }
-
                 mStringeeCall.enableVideo(isVideoOn);
             }
         }
     }
 
     private void startCall() {
-        mStringeeCall = new StringeeCall(OutgoingCallActivity.this, Common.client, "84989047019", phoneNumber);
+        mStringeeCall = new StringeeCall(OutgoingCallActivity.this, Common.client, Common.client.getUserId(), phoneNumber);
         mStringeeCall.setVideoCall(isVideoCall);
         mStringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
             @Override
@@ -282,8 +271,9 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void run() {
                         if (stringeeCall.isVideoCall()) {
+                            vLocal.removeAllViews();
                             vLocal.addView(stringeeCall.getLocalView());
-                            stringeeCall.renderLocalView(true);
+                            stringeeCall.renderLocalView(true, StringeeCall.ScalingType.SCALE_ASPECT_FIT);
                         }
                     }
                 });
@@ -296,6 +286,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void run() {
                         if (stringeeCall.isVideoCall()) {
+                            vRemote.removeAllViews();
                             vRemote.addView(stringeeCall.getRemoteView());
                             stringeeCall.renderRemoteView(false);
                         }

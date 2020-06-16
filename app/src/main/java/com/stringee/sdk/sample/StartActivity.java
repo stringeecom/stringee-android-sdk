@@ -8,12 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
@@ -21,7 +15,6 @@ import com.stringee.exception.StringeeError;
 import com.stringee.listener.StatusListener;
 import com.stringee.listener.StringeeConnectionListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -150,55 +143,18 @@ public class StartActivity extends MActivity {
 
             @Override
             public void onRequestNewToken(StringeeClient client) {
-                getTokenAndConnect(username);
             }
 
             @Override
             public void onCustomMessage(String from, JSONObject msg) {
 
             }
-        });
 
-        getTokenAndConnect(username);
-    }
-
-    private void getTokenAndConnect(final String userId) {
-        Thread thread = new Thread(new Runnable() {
             @Override
-            public void run() {
-                String url = "https://v1.stringee.com/samples_and_docs/access_token/gen_access_token.php?userId=" + userId;
-                RequestQueue queue = Volley.newRequestQueue(StartActivity.this);
-                StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            token = jsonObject.getString("access_token");
-                            Common.client.connect(token);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-                queue.add(request);
+            public void onTopicMessage(String s, JSONObject jsonObject) {
+
             }
         });
-        thread.start();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        String token = PrefUtils.getString("token", "");
-        Common.client.unregisterPushToken(token, new StatusListener() {
-            @Override
-            public void onSuccess() {
-                Log.d("Stringee", "unregisterPushToken success.");
-            }
-        });
+        Common.client.connect("eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE1OTIyMTM4MDEiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNTk0ODA1ODAxLCJ1c2VySWQiOiJsdWFuIn0.RbnkbNC6N5ThBbmKncNxUeWbUG5fJYbk15zTQpQ98Mc");
     }
 }

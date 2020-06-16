@@ -1,13 +1,11 @@
 package com.stringee.sdk.sample;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 
 import com.stringee.call.StringeeCall;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -197,6 +194,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void run() {
                         if (stringeeCall.isVideoCall()) {
+                            vLocal.removeAllViews();
                             vLocal.addView(stringeeCall.getLocalView());
                             stringeeCall.renderLocalView(true);
                         }
@@ -210,6 +208,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void run() {
                         if (stringeeCall.isVideoCall()) {
+                            vRemote.removeAllViews();
                             vRemote.addView(stringeeCall.getRemoteView());
                             stringeeCall.renderRemoteView(false);
                         }
@@ -219,72 +218,6 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onCallInfo(final StringeeCall stringeeCall, final JSONObject callInfo) {
-                try {
-                    String type = callInfo.getString("type");
-                    if (type.equals("cameraRequest")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(IncomingCallActivity.this);
-                                builder.setMessage("You have a camera request. Do you want to accept?");
-                                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                        JSONObject answerObject = new JSONObject();
-                                        try {
-                                            answerObject.put("type", "answerCameraRequest");
-                                            answerObject.put("accept", false);
-                                            stringeeCall.sendCallInfo(answerObject);
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        isVideoOn = true;
-                                        btnVideo.setImageResource(R.drawable.ic_video);
-                                        stringeeCall.enableVideo(true);
-                                        JSONObject answerObject = new JSONObject();
-                                        try {
-                                            answerObject.put("type", "answerCameraRequest");
-                                            answerObject.put("accept", true);
-                                            stringeeCall.sendCallInfo(answerObject);
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                            }
-                        });
-                    } else if (type.equals("answerCameraRequest")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                boolean accept = false;
-                                try {
-                                    accept = callInfo.getBoolean("accept");
-                                    if (accept) {
-                                        Utils.reportMessage(IncomingCallActivity.this, "Your camera request is accepted.");
-                                    } else {
-                                        Utils.reportMessage(IncomingCallActivity.this, "Your camera request is rejected.");
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
         });
         stringeeCall.initAnswer(this, Common.client);
@@ -337,15 +270,6 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                 btnVideo.setImageResource(R.drawable.ic_video_off);
             }
             if (mStringeeCall != null) {
-                if (!mStringeeCall.isVideoCall()) { // Send camera request
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("type", "cameraRequest");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    mStringeeCall.sendCallInfo(jsonObject);
-                }
                 mStringeeCall.enableVideo(isVideoOn);
             }
         }

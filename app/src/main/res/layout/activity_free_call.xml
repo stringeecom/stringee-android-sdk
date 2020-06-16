@@ -30,9 +30,9 @@
     <FrameLayout
         android:id="@+id/v_local"
         android:layout_width="80dp"
-        android:layout_height="120dp"
-        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
         android:layout_below="@id/v_top"
+        android:layout_alignParentRight="true"
         android:layout_margin="20dp" />
 
     <TextView
