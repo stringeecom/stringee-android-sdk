@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
+import com.stringee.call.StringeeCall2;
 import com.stringee.exception.StringeeError;
 import com.stringee.listener.StatusListener;
 import com.stringee.listener.StringeeConnectionListener;
@@ -25,7 +26,7 @@ public class StartActivity extends MActivity {
 
     private EditText etRoomId;
     private String username;
-    private String token;
+    private String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE2MTczNTU5NTQiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNjE5OTQ3OTU0LCJ1c2VySWQiOiJsdWFubmIifQ.16il5x8HH-ww8Q5pSywje0zBwHigVQs4NQDPdVViywc";
     TextView tvTitle;
 
     @Override
@@ -78,20 +79,6 @@ public class StartActivity extends MActivity {
                     startActivity(intent1);
                 }
                 break;
-            case R.id.btn_make:
-                Intent intent = new Intent(this, MeetingActivity.class);
-                intent.putExtra("action", "make");
-                startActivity(intent);
-                break;
-            case R.id.btn_join:
-                String roomId = etRoomId.getText().toString().trim();
-                if (roomId.trim().length() > 0) {
-                    Intent intent1 = new Intent(this, MeetingActivity.class);
-                    intent1.putExtra("action", "join");
-                    intent1.putExtra("roomId", Integer.parseInt(roomId));
-                    startActivity(intent1);
-                }
-                break;
         }
     }
 
@@ -137,6 +124,11 @@ public class StartActivity extends MActivity {
             }
 
             @Override
+            public void onIncomingCall2(StringeeCall2 stringeeCall2) {
+
+            }
+
+            @Override
             public void onConnectionError(StringeeClient client, StringeeError error) {
 
             }
@@ -155,6 +147,6 @@ public class StartActivity extends MActivity {
 
             }
         });
-        Common.client.connect("eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE1OTIyMTM4MDEiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNTk0ODA1ODAxLCJ1c2VySWQiOiJsdWFuIn0.RbnkbNC6N5ThBbmKncNxUeWbUG5fJYbk15zTQpQ98Mc");
+        Common.client.connect(token);
     }
 }

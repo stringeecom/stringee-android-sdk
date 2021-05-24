@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stringee.call.StringeeCall;
+import com.stringee.listener.StatusListener;
 
 import org.json.JSONObject;
 
@@ -220,7 +221,12 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             public void onCallInfo(final StringeeCall stringeeCall, final JSONObject callInfo) {
             }
         });
-        stringeeCall.initAnswer(this, Common.client);
+        stringeeCall.ringing(new StatusListener() {
+            @Override
+            public void onSuccess() {
+
+            }
+        });
     }
 
     @Override
@@ -248,9 +254,6 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                 btnSpeaker.setImageResource(R.drawable.ic_speaker_on);
             } else {
                 btnSpeaker.setImageResource(R.drawable.ic_speaker_off);
-            }
-            if (mStringeeCall != null) {
-                mStringeeCall.setSpeakerphoneOn(isSpeaker);
             }
         } else if (v.getId() == R.id.btn_mute) {
             isMute = !isMute;

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stringee.call.StringeeCall;
+import com.stringee.video.StringeeVideo;
 
 import org.json.JSONObject;
 
@@ -168,9 +169,6 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             } else {
                 btnSpeaker.setImageResource(R.drawable.ic_speaker_off);
             }
-            if (mStringeeCall != null) {
-                mStringeeCall.setSpeakerphoneOn(isSpeaker);
-            }
         } else if (v.getId() == R.id.btn_end_call) {
             if (mStringeeCall != null) {
                 mStringeeCall.hangup();
@@ -191,7 +189,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void startCall() {
-        mStringeeCall = new StringeeCall(OutgoingCallActivity.this, Common.client, Common.client.getUserId(), phoneNumber);
+        mStringeeCall = new StringeeCall(Common.client, Common.client.getUserId(), phoneNumber);
         mStringeeCall.setVideoCall(isVideoCall);
         mStringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
             @Override
@@ -273,7 +271,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                         if (stringeeCall.isVideoCall()) {
                             vLocal.removeAllViews();
                             vLocal.addView(stringeeCall.getLocalView());
-                            stringeeCall.renderLocalView(true, StringeeCall.ScalingType.SCALE_ASPECT_FIT);
+                            stringeeCall.renderLocalView(true, StringeeVideo.ScalingType.SCALE_ASPECT_FIT);
                         }
                     }
                 });
