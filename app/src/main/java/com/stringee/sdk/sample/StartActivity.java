@@ -26,7 +26,7 @@ public class StartActivity extends MActivity {
 
     private EditText etRoomId;
     private String username;
-    private String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE2MTczNTU5NTQiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNjE5OTQ3OTU0LCJ1c2VySWQiOiJsdWFubmIifQ.16il5x8HH-ww8Q5pSywje0zBwHigVQs4NQDPdVViywc";
+    private String token = "PUT_TOKEN_HERE";
     TextView tvTitle;
 
     @Override

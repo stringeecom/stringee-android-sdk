@@ -15,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stringee.call.StringeeCall;
+import com.stringee.common.StringeeAudioManager;
 import com.stringee.listener.StatusListener;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by luannguyen on 8/19/2017.
@@ -53,6 +55,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
     public static final int REQUEST_PERMISSION_CALLIN = 1;
 
     private StringeeCall mStringeeCall;
+    private StringeeAudioManager audioManager;
 
 
     @Override
@@ -130,6 +133,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                 return;
             }
         }
+        audioManager = StringeeAudioManager.create(this);
         startCall(mStringeeCall);
     }
 
@@ -146,6 +150,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                             if (mStringeeCall != null && mStringeeCall.getCallId().equals(stringeeCall.getCallId())) {
                                 tvState.setText(R.string.call_ended);
                                 mStringeeCall.hangup();
+                                audioManager.stop();
                                 finish();
                             }
                         }
@@ -168,6 +173,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                             case BUSY:
                             case ENDED:
                                 mStringeeCall.hangup();
+                                audioManager.stop();
                                 finish();
                                 break;
                         }
@@ -221,6 +227,12 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             public void onCallInfo(final StringeeCall stringeeCall, final JSONObject callInfo) {
             }
         });
+        audioManager.start(new StringeeAudioManager.AudioManagerEvents() {
+            @Override
+            public void onAudioDeviceChanged(StringeeAudioManager.AudioDevice audioDevice, Set<StringeeAudioManager.AudioDevice> set) {
+
+            }
+        });
         stringeeCall.ringing(new StatusListener() {
             @Override
             public void onSuccess() {
@@ -242,11 +254,13 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             tvState.setText(R.string.call_ended);
             if (mStringeeCall != null) {
                 mStringeeCall.hangup();
+                audioManager.stop();
             }
             finish();
         } else if (v.getId() == R.id.btn_end) {
             tvState.setText(R.string.call_ended);
             mStringeeCall.hangup();
+            audioManager.stop();
             finish();
         } else if (v.getId() == R.id.btn_speaker) {
             isSpeaker = !isSpeaker;

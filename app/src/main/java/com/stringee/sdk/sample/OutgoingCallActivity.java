@@ -15,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stringee.call.StringeeCall;
+import com.stringee.common.StringeeAudioManager;
 import com.stringee.video.StringeeVideo;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,6 +53,8 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
 
     private StringeeCall.MediaState mMediaState;
     private StringeeCall.SignalingState mState;
+
+    private StringeeAudioManager audioManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,6 +120,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                 return;
             }
         }
+        audioManager = StringeeAudioManager.create(this);
         startCall();
     }
 
@@ -173,6 +178,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             if (mStringeeCall != null) {
                 mStringeeCall.hangup();
             }
+            audioManager.stop();
 
             finish();
         } else if (v.getId() == R.id.btn_video) {
@@ -219,6 +225,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                             if (mStringeeCall != null && mStringeeCall.getCallId().equals(call.getCallId())) {
                                 tvState.setText(R.string.call_ended);
                                 mStringeeCall.hangup();
+                                audioManager.stop();
                                 finish();
                             }
                         }
@@ -294,6 +301,12 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onCallInfo(StringeeCall stringeeCall, final JSONObject callInfo) {
+            }
+        });
+        audioManager.start(new StringeeAudioManager.AudioManagerEvents() {
+            @Override
+            public void onAudioDeviceChanged(StringeeAudioManager.AudioDevice audioDevice, Set<StringeeAudioManager.AudioDevice> set) {
+
             }
         });
         mStringeeCall.makeCall();

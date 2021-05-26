@@ -1,40 +1,16 @@
 apply plugin: 'com.android.library'
 
-ext {
-    bintrayRepo = 'Stringee-Android-SDK'
-    bintrayName = 'stringee-android-sdk'
-
-    publishedGroupId = 'com.stringee.sdk.android'
-    libraryName = 'Stringee Android SDK'
-    artifact = 'stringee-android-sdk'
-
-    libraryDescription = 'Communication platform for building voice & video, messaging applications'
-
-    siteUrl = 'https://stringee.com'
-    gitUrl = 'https://stringee.com'
-
-    libraryVersion = '1.6.9'
-
-    developerId = 'stringee'
-    developerName = 'Stringee., JSC'
-    developerEmail = 'admin@stringee.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-}
-
 android {
     lintOptions {
         abortOnError false
     }
 
     defaultConfig {
-        targetSdkVersion 27
+        targetSdkVersion 30
         minSdkVersion 16
     }
 
-    compileSdkVersion 27
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
 
     packagingOptions {
@@ -48,8 +24,13 @@ android {
 }
 
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(dir: "libs", include: ["*.jar", "*.aar"])
 }
 
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+ext {
+    PUBLISH_GROUP_ID = 'com.stringee.sdk.android'
+    PUBLISH_VERSION = '1.7.0'
+    PUBLISH_ARTIFACT_ID = 'stringee-android-sdk'
+}
+
+apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
