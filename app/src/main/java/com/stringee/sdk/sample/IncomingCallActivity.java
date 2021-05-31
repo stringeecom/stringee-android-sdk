@@ -14,10 +14,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.stringee.call.StringeeCall;
+import com.stringee.call.StringeeCall2;
 import com.stringee.common.StringeeAudioManager;
 import com.stringee.listener.StatusListener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
 
     public static final int REQUEST_PERMISSION_CALLIN = 1;
 
-    private StringeeCall mStringeeCall;
+    private StringeeCall2 mStringeeCall;
     private StringeeAudioManager audioManager;
 
 
@@ -137,16 +138,16 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
         startCall(mStringeeCall);
     }
 
-    private void startCall(final StringeeCall stringeeCall) {
-        stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
+    private void startCall(final StringeeCall2 stringeeCall) {
+        stringeeCall.setCallListener(new StringeeCall2.StringeeCallListener() {
 
             @Override
-            public void onSignalingStateChange(final StringeeCall stringeeCall, final StringeeCall.SignalingState signalingState, String reason, int sipCode, String sipReason) {
+            public void onSignalingStateChange(final StringeeCall2 stringeeCall, final StringeeCall2.SignalingState signalingState, String reason, int sipCode, String sipReason) {
                 Log.e("Stringee", "onSignalingStateChange " + reason);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (signalingState == StringeeCall.SignalingState.ENDED) {
+                        if (signalingState == StringeeCall2.SignalingState.ENDED) {
                             if (mStringeeCall != null && mStringeeCall.getCallId().equals(stringeeCall.getCallId())) {
                                 tvState.setText(R.string.call_ended);
                                 mStringeeCall.hangup();
@@ -159,12 +160,12 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onError(StringeeCall stringeeCall, int code, String description) {
+            public void onError(StringeeCall2 stringeeCall, int code, String description) {
                 Log.e("Stringee", "========== error: " + description);
             }
 
             @Override
-            public void onHandledOnAnotherDevice(StringeeCall stringeeCall, final StringeeCall.SignalingState callState, String description) {
+            public void onHandledOnAnotherDevice(StringeeCall2 stringeeCall, final StringeeCall2.SignalingState callState, String description) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -182,8 +183,8 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onMediaStateChange(final StringeeCall stringeeCall, StringeeCall.MediaState mediaState) {
-                if (mediaState == StringeeCall.MediaState.CONNECTED) {
+            public void onMediaStateChange(final StringeeCall2 stringeeCall, StringeeCall2.MediaState mediaState) {
+                if (mediaState == StringeeCall2.MediaState.CONNECTED) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -196,7 +197,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onLocalStream(final StringeeCall stringeeCall) {
+            public void onLocalStream(final StringeeCall2 stringeeCall) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -210,7 +211,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onRemoteStream(final StringeeCall stringeeCall) {
+            public void onRemoteStream(final StringeeCall2 stringeeCall) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -224,7 +225,8 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onCallInfo(final StringeeCall stringeeCall, final JSONObject callInfo) {
+            public void onCallInfo(final StringeeCall2 stringeeCall, final JSONObject callInfo) {
+                Log.d("Stringee", "onCallInfo: " + callInfo.toString());
             }
         });
         audioManager.start(new StringeeAudioManager.AudioManagerEvents() {
@@ -269,6 +271,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             } else {
                 btnSpeaker.setImageResource(R.drawable.ic_speaker_off);
             }
+            audioManager.setSpeakerphoneOn(isSpeaker);
         } else if (v.getId() == R.id.btn_mute) {
             isMute = !isMute;
             if (isMute) {
@@ -278,6 +281,18 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
             }
             if (mStringeeCall != null) {
                 mStringeeCall.mute(isMute);
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("name", "Luan");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mStringeeCall.sendCallInfo(jsonObject, new StatusListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("Stringee", "Send call info");
+                    }
+                });
             }
         } else if (v.getId() == R.id.btn_video) {
             isVideoOn = !isVideoOn;
@@ -292,7 +307,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void checkCallStats(StringeeCall.StringeeCallStats stats) {
+    private void checkCallStats(StringeeCall2.StringeeCallStats stats) {
         double videoTimestamp = stats.timeStamp / 1000;
 
         //initialize values

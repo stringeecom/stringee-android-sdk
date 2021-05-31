@@ -14,10 +14,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.stringee.call.StringeeCall;
+import com.stringee.call.StringeeCall2;
 import com.stringee.common.StringeeAudioManager;
+import com.stringee.listener.StatusListener;
 import com.stringee.video.StringeeVideo;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
     private boolean isMute = false;
     private boolean isSpeaker = false;
     private String phoneNumber;
-    private StringeeCall mStringeeCall;
+    private StringeeCall2 mStringeeCall;
     private boolean isVideoCall;
     private boolean isVideoOn;
 
@@ -51,8 +53,8 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
 
     public static final int REQUEST_PERMISSION_CALLOUT = 1;
 
-    private StringeeCall.MediaState mMediaState;
-    private StringeeCall.SignalingState mState;
+    private StringeeCall2.MediaState mMediaState;
+    private StringeeCall2.SignalingState mState;
 
     private StringeeAudioManager audioManager;
 
@@ -166,6 +168,18 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             }
             if (mStringeeCall != null) {
                 mStringeeCall.mute(isMute);
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("name", "Luan");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mStringeeCall.sendCallInfo(jsonObject, new StatusListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("Stringee", "Send call info");
+                    }
+                });
             }
         } else if (v.getId() == R.id.btn_speaker) {
             isSpeaker = !isSpeaker;
@@ -174,6 +188,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             } else {
                 btnSpeaker.setImageResource(R.drawable.ic_speaker_off);
             }
+            audioManager.setSpeakerphoneOn(isSpeaker);
         } else if (v.getId() == R.id.btn_end_call) {
             if (mStringeeCall != null) {
                 mStringeeCall.hangup();
@@ -195,25 +210,25 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void startCall() {
-        mStringeeCall = new StringeeCall(Common.client, Common.client.getUserId(), phoneNumber);
+        mStringeeCall = new StringeeCall2(Common.client, Common.client.getUserId(), phoneNumber);
         mStringeeCall.setVideoCall(isVideoCall);
-        mStringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
+        mStringeeCall.setCallListener(new StringeeCall2.StringeeCallListener() {
             @Override
-            public void onSignalingStateChange(final StringeeCall call, final StringeeCall.SignalingState signalingState, String reason, int sipCode, String sipReason) {
+            public void onSignalingStateChange(final StringeeCall2 call, final StringeeCall2.SignalingState signalingState, String reason, int sipCode, String sipReason) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Log.d("Stringee", "======== state: " + signalingState);
                         mState = signalingState;
-                        if (mState == StringeeCall.SignalingState.ANSWERED && mMediaState == StringeeCall.MediaState.CONNECTED) {
+                        if (mState == StringeeCall2.SignalingState.ANSWERED && mMediaState == StringeeCall2.MediaState.CONNECTED) {
                             tvState.setText("Started");
                             Timer timer = new Timer();
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    call.getStats(new StringeeCall.CallStatsListener() {
+                                    call.getStats(new StringeeCall2.CallStatsListener() {
                                         @Override
-                                        public void onCallStats(StringeeCall.StringeeCallStats statsReport) {
+                                        public void onCallStats(StringeeCall2.StringeeCallStats statsReport) {
                                             checkCallStats(statsReport);
                                         }
                                     });
@@ -221,7 +236,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                             }, 0, 2000);
                         }
 
-                        if (signalingState == StringeeCall.SignalingState.ENDED || signalingState == StringeeCall.SignalingState.BUSY) {
+                        if (signalingState == StringeeCall2.SignalingState.ENDED || signalingState == StringeeCall2.SignalingState.BUSY) {
                             if (mStringeeCall != null && mStringeeCall.getCallId().equals(call.getCallId())) {
                                 tvState.setText(R.string.call_ended);
                                 mStringeeCall.hangup();
@@ -234,31 +249,31 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onError(StringeeCall stringeeCall, int code, String description) {
+            public void onError(StringeeCall2 stringeeCall, int code, String description) {
 
             }
 
             @Override
-            public void onHandledOnAnotherDevice(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String description) {
+            public void onHandledOnAnotherDevice(StringeeCall2 stringeeCall, StringeeCall2.SignalingState signalingState, String description) {
 
             }
 
             @Override
-            public void onMediaStateChange(final StringeeCall stringeeCall, final StringeeCall.MediaState mediaState) {
+            public void onMediaStateChange(final StringeeCall2 stringeeCall, final StringeeCall2.MediaState mediaState) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mMediaState = mediaState;
-                        if (mMediaState == StringeeCall.MediaState.CONNECTED && mState == StringeeCall.SignalingState.ANSWERED) {
+                        if (mMediaState == StringeeCall2.MediaState.CONNECTED && mState == StringeeCall2.SignalingState.ANSWERED) {
 
                             tvState.setText("Started");
                             Timer timer = new Timer();
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    stringeeCall.getStats(new StringeeCall.CallStatsListener() {
+                                    stringeeCall.getStats(new StringeeCall2.CallStatsListener() {
                                         @Override
-                                        public void onCallStats(StringeeCall.StringeeCallStats statsReport) {
+                                        public void onCallStats(StringeeCall2.StringeeCallStats statsReport) {
                                             checkCallStats(statsReport);
                                         }
                                     });
@@ -270,7 +285,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onLocalStream(final StringeeCall stringeeCall) {
+            public void onLocalStream(final StringeeCall2 stringeeCall) {
                 Log.e("Stringee", "========= onLocalStream");
                 runOnUiThread(new Runnable() {
                     @Override
@@ -285,7 +300,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onRemoteStream(final StringeeCall stringeeCall) {
+            public void onRemoteStream(final StringeeCall2 stringeeCall) {
                 Log.e("Stringee", "========= onRemoteStream");
                 runOnUiThread(new Runnable() {
                     @Override
@@ -300,7 +315,8 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onCallInfo(StringeeCall stringeeCall, final JSONObject callInfo) {
+            public void onCallInfo(StringeeCall2 stringeeCall, final JSONObject callInfo) {
+                Log.d("Stringee", "onCallInfo: " + callInfo.toString());
             }
         });
         audioManager.start(new StringeeAudioManager.AudioManagerEvents() {
@@ -312,7 +328,7 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
         mStringeeCall.makeCall();
     }
 
-    private void checkCallStats(StringeeCall.StringeeCallStats stats) {
+    private void checkCallStats(StringeeCall2.StringeeCallStats stats) {
         double videoTimestamp = stats.timeStamp / 1000;
 
         //initialize values

@@ -26,7 +26,8 @@ public class StartActivity extends MActivity {
 
     private EditText etRoomId;
     private String username;
-    private String token = "PUT_TOKEN_HERE";
+        private String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE2MjI0NDQyMTAiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNjI1MDM2MjEwLCJ1c2VySWQiOiJ1c2VyMSJ9.vxw4jNZz3EDHwb8MtHKfg5ejZ_SViJYURTsGHZYrfRs";
+//    private String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE2MjI0NDQyNjYiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNjI1MDM2MjY2LCJ1c2VySWQiOiJ1c2VyMiJ9.EfPANfH6RAcGejbDjBAKtQM7wpSAa2qN7sAq6A0h-IM";
     TextView tvTitle;
 
     @Override
@@ -116,16 +117,16 @@ public class StartActivity extends MActivity {
 
             @Override
             public void onIncomingCall(StringeeCall stringeeCall) {
+
+            }
+
+            @Override
+            public void onIncomingCall2(StringeeCall2 stringeeCall) {
                 String callId = stringeeCall.getCallId();
                 Common.callsMap.put(callId, stringeeCall);
                 Intent intent = new Intent(StartActivity.this, IncomingCallActivity.class);
                 intent.putExtra("call_id", callId);
                 startActivity(intent);
-            }
-
-            @Override
-            public void onIncomingCall2(StringeeCall2 stringeeCall2) {
-
             }
 
             @Override
