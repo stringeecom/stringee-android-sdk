@@ -11,7 +11,7 @@ android {
     }
 
     compileSdkVersion 30
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '30.0.3'
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -29,7 +29,7 @@ dependencies {
 
 ext {
     PUBLISH_GROUP_ID = 'com.stringee.sdk.android'
-    PUBLISH_VERSION = '1.7.1'
+    PUBLISH_VERSION = '1.8.0'
     PUBLISH_ARTIFACT_ID = 'stringee-android-sdk'
 }
 

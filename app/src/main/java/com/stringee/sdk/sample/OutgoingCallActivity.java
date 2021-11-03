@@ -18,6 +18,7 @@ import com.stringee.call.StringeeCall2;
 import com.stringee.common.StringeeAudioManager;
 import com.stringee.listener.StatusListener;
 import com.stringee.video.StringeeVideo;
+import com.stringee.video.StringeeVideoTrack;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -312,6 +313,16 @@ public class OutgoingCallActivity extends AppCompatActivity implements View.OnCl
                         }
                     }
                 });
+            }
+
+            @Override
+            public void onVideoTrackAdded(StringeeVideoTrack stringeeVideoTrack) {
+
+            }
+
+            @Override
+            public void onVideoTrackRemoved(StringeeVideoTrack stringeeVideoTrack) {
+
             }
 
             @Override
