@@ -6,11 +6,11 @@ android {
     }
 
     defaultConfig {
-        targetSdkVersion 30
+        targetSdkVersion 32
         minSdkVersion 16
     }
 
-    compileSdkVersion 30
+    compileSdkVersion 32
     buildToolsVersion '30.0.3'
 
     packagingOptions {
@@ -29,7 +29,7 @@ dependencies {
 
 ext {
     PUBLISH_GROUP_ID = 'com.stringee.sdk.android'
-    PUBLISH_VERSION = '1.8.0'
+    PUBLISH_VERSION = '1.9.7'
     PUBLISH_ARTIFACT_ID = 'stringee-android-sdk'
 }
 

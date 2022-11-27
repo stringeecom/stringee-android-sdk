@@ -8,12 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.call.StringeeCall2;
 import com.stringee.exception.StringeeError;
-import com.stringee.listener.StatusListener;
 import com.stringee.listener.StringeeConnectionListener;
 
 import org.json.JSONObject;
@@ -26,8 +24,7 @@ public class StartActivity extends MActivity {
 
     private EditText etRoomId;
     private String username;
-    private String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE2MzQ4NzQyNjUiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNjM3NDY2MjY1LCJ1c2VySWQiOiJsdWFuIn0.U0U2IPgwfrR6TXP8JC8IRnx-k5Cfw0Q1Q0KK0-fDg6g";
-    //    private String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE2MzA4OTcxNjAiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNjMzNDg5MTYwLCJ1c2VySWQiOiJsdWFubmIifQ.yaWmuQuHJ6ym8iVUQqep4U5PzCwbLh2bTlV6HGAlrOc";
+    private String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1LTE2Njc5ODk1ODYiLCJpc3MiOiJTS0NsejhzQ2tKeDNzdU13SmdCdDJ6bUc2T01JbVRYb2Y1IiwiZXhwIjoxNjcwNTgxNTg2LCJ1c2VySWQiOiJsdWFuIn0.7OzOidv4x7E_2qZnAHYjxQ4QoUcqbLK2NYxnulhU4jY";
     TextView tvTitle;
 
     @Override
@@ -42,8 +39,8 @@ public class StartActivity extends MActivity {
 
         tvTitle = (TextView) findViewById(R.id.tv_title);
 
-        Button btnMakeRoom = (Button) findViewById(R.id.btn_make);
-        btnMakeRoom.setOnClickListener(this);
+        Button btnCallOUt = (Button) findViewById(R.id.btn_callout);
+        btnCallOUt.setOnClickListener(this);
 
         Button btnJoin = (Button) findViewById(R.id.btn_join);
         btnJoin.setOnClickListener(this);
@@ -80,6 +77,16 @@ public class StartActivity extends MActivity {
                     startActivity(intent1);
                 }
                 break;
+
+            case R.id.btn_callout:
+                String phone3 = etRoomId.getText().toString().trim();
+                if (phone3.trim().length() > 0) {
+                    Intent intent1 = new Intent(this, OutgoingCallActivity.class);
+                    intent1.putExtra("phone", phone3);
+                    intent1.putExtra("is_callout", true);
+                    startActivity(intent1);
+                }
+                break;
         }
     }
 
@@ -95,19 +102,6 @@ public class StartActivity extends MActivity {
                         tvTitle.setText("My username: " + client.getUserId());
                     }
                 });
-                Log.e("Stringee", "========= onConnectionConnected");
-                final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                Common.client.registerPushToken(refreshedToken, new StatusListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d("Stringee", "registerPushToken success.");
-                        PrefUtils.putString("token", refreshedToken);
-                    }
-
-                    public void onError(StringeeError error) {
-                        Log.d("Stringee", error.getMessage());
-                    }
-                });
             }
 
             @Override
@@ -117,11 +111,6 @@ public class StartActivity extends MActivity {
 
             @Override
             public void onIncomingCall(StringeeCall stringeeCall) {
-
-            }
-
-            @Override
-            public void onIncomingCall2(StringeeCall2 stringeeCall) {
                 String callId = stringeeCall.getCallId();
                 Common.callsMap.put(callId, stringeeCall);
                 Intent intent = new Intent(StartActivity.this, IncomingCallActivity.class);
@@ -130,8 +119,17 @@ public class StartActivity extends MActivity {
             }
 
             @Override
-            public void onConnectionError(StringeeClient client, StringeeError error) {
+            public void onIncomingCall2(StringeeCall2 stringeeCall) {
+                String callId = stringeeCall.getCallId();
+                Common.callsMap2.put(callId, stringeeCall);
+                Intent intent = new Intent(StartActivity.this, IncomingCallActivity.class);
+                intent.putExtra("call_id", callId);
+                startActivity(intent);
+            }
 
+            @Override
+            public void onConnectionError(StringeeClient client, StringeeError error) {
+                Log.d("Stringee", "onConnectionError: " + error.getCode() + " " + error.getMessage());
             }
 
             @Override

@@ -2,10 +2,11 @@ package com.stringee.sdk.sample;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-public class MActivity extends AppCompatActivity implements View.OnClickListener{
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ProgressDialog prLoading;
 
